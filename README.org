@@ -1,0 +1,14 @@
+Little interface to extra commands in erc.
+
+* Setup
+  - Clone: =git clone  git://github.com/nixeagle/erc-extra-commands.git=
+  - Add: =(add-to-list 'load-path "~/path/to/repo")= to your .emacs
+  - Add: =(require 'erc-extra-commands-mode)= to your .emacs
+  - Do: =M-x customize-option RET erc-extra-commands RET=
+  - Enjoy!
+
+
+* Status
+  Note that the actual api for adding new commands is really not the best
+  at this time, I'd like to make a macro to do the vast majority of
+  defining a new command without having to modify two files to do it.
