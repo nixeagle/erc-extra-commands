@@ -8,7 +8,7 @@
 ;; Version:
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 1
+;;     Update #: 2
 ;; URL:
 ;; Keywords:
 ;; Compatibility:
@@ -57,22 +57,27 @@ See the group `erc-extra-commands-mode' for more."
   ())
 
 (defcustom erc-extra-commands nil
-  "Extra commands that can be enabled"
+  "Extra commands that can be enabled."
   :group 'erc-extra-commands-mode
   :set (lambda (sym val)
 	 ;; disable modules which have just been removed
-	 (when (and (boundp 'erc-extra-commands) erc-extra-commands val)
-	   (dolist (command erc-extra-commands)
-	     (unless (member command val)
+         (print (list sym val))
+	 (when (and (boundp 'erc-extra-commands))
+           (dolist (command erc-extra-commands)
+             (print "val is bound")
+             (unless (member command val)
 	       (let ((f (intern-soft (format "erc-extra-command-%s" command))))
-		 (when (and (fboundp f) (boundp f) (symbol-value f))
+		 (when (and (fboundp f))
+                   ;; original had (and .... (boundp f) (symbol-value f))
 		   (message "Disabling `erc-extra-command-%s'" command)
 		   (funcall f 0))))))
 	 (set sym val)
 	 ;; this test is for the case where erc hasn't been loaded yet
 	 (when (fboundp 'erc-update-extra-commands)
-	   (erc-update-extra-commands))
-         ))
+	   (erc-update-extra-commands)))
+  :type
+  '(set :greedy t
+        (const :tag "elisp: Evaluate emacs lisp" elisp)))
 
 (defun erc-update-extra-commands ()
   "run this to enable commands for `erc-extra-commands'."
