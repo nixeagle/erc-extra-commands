@@ -8,7 +8,7 @@
 ;; Version:
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 3
+;;     Update #: 4
 ;; URL:
 ;; Keywords:
 ;; Compatibility:
@@ -60,7 +60,6 @@ See the group `erc-extra-commands-mode' for more."
   "Extra commands that can be enabled."
   :group 'erc-extra-commands-mode
   :get (lambda (sym)
-         (print (symbol-value sym))
          (symbol-value sym))
   :set (lambda (sym val)
 	 ;; disable modules which have just been removed
