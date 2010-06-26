@@ -8,7 +8,7 @@
 ;; Version:
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 2
+;;     Update #: 3
 ;; URL:
 ;; Keywords:
 ;; Compatibility:
@@ -59,12 +59,13 @@ See the group `erc-extra-commands-mode' for more."
 (defcustom erc-extra-commands nil
   "Extra commands that can be enabled."
   :group 'erc-extra-commands-mode
+  :get (lambda (sym)
+         (print (symbol-value sym))
+         (symbol-value sym))
   :set (lambda (sym val)
 	 ;; disable modules which have just been removed
-         (print (list sym val))
-	 (when (and (boundp 'erc-extra-commands))
+         (when (and (boundp 'erc-extra-commands))
            (dolist (command erc-extra-commands)
-             (print "val is bound")
              (unless (member command val)
 	       (let ((f (intern-soft (format "erc-extra-command-%s" command))))
 		 (when (and (fboundp f))
@@ -77,19 +78,21 @@ See the group `erc-extra-commands-mode' for more."
 	   (erc-update-extra-commands)))
   :type
   '(set :greedy t
-        (const :tag "elisp: Evaluate emacs lisp" elisp)))
+        (const :tag "elisp: Evaluate emacs lisp" elisp)
+        (const :tag "cl: Evaluate common lisp" cl)))
 
 (defun erc-update-extra-commands ()
   "run this to enable commands for `erc-extra-commands'."
-  (dolist (command erc-extra-commands)
-    (let ((.require (concat "erc-extra-command-" (symbol-name command))))
-      (condition-case nil
-          (require (intern .require))
-        (error nil))
-      (let ((sym (intern-soft (concat "erc-extra-command-" (symbol-name command)))))
-        (if (fboundp sym)
-            (funcall sym 1)
-          (error "`%s' is not a known erc command" command))))))
+  (if (listp erc-extra-commands)
+      (dolist (command erc-extra-commands)
+        (let ((.require (concat "erc-extra-command-" (symbol-name command))))
+          (condition-case nil
+              (require (intern .require))
+            (error nil))
+          (let ((sym (intern-soft (concat "erc-extra-command-" (symbol-name command)))))
+            (if (fboundp sym)
+                (funcall sym 1)
+              (error "`%s' is not a known erc command" command)))))))
 
 (provide 'erc-extra-commands-mode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
