@@ -1,4 +1,4 @@
-;;; erc-extra-commands-mode.el ---
+;;; erc-extra-commands-mode.el --- ???
 ;;
 ;; Filename: erc-extra-commands-mode.el
 ;; Description:
